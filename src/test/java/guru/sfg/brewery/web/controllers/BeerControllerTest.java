@@ -72,6 +72,7 @@ class BeerControllerTest {
 
         mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
+
                 .build();
     }
 
