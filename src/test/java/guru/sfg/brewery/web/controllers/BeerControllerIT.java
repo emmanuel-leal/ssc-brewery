@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -59,6 +60,16 @@ public class BeerControllerIT {
     @Test
     void findBeers() throws Exception{
         mockMvc.perform(get("/beers/find"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/findBeers"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+
+    // en este test se hace la prueba pero ahora valida el usuario y contrasenia configurados
+    @Test
+    void findBeersWithHttpBasic() throws Exception{
+        mockMvc.perform(get("/beers/find").with(SecurityMockMvcRequestPostProcessors.httpBasic("josesito","lealsito")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("beers/findBeers"))
                 .andExpect(model().attributeExists("beer"));
