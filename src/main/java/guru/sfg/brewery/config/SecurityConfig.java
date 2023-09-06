@@ -38,6 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("user")
                 .password("{noop}password")
                 .roles("USER");
+//se puede utilizar con and o creando un nuevo metodo
+        auth.inMemoryAuthentication()
+                .withUser("scot")
+                .password("{noop}tiger")
+                .roles("CUSTOMER");
     }
 
     /*    @Override
