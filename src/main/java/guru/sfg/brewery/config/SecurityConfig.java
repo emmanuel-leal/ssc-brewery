@@ -6,25 +6,27 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
-                authorizeRequests( authorizer ->
+                authorizeRequests(authorizer ->
                 {
-                    authorizer.antMatchers("/", "/webjars/**","/login","/resources/**","/beers/**").permitAll()
-                            .antMatchers(HttpMethod.GET,"/api/v1/beer/**").permitAll()
-                            .mvcMatchers(HttpMethod.GET,"/api/v1/beerUpc/{upc}").permitAll();
+                    authorizer.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/**").permitAll()
+                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
+                            .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
                 })
                 .authorizeRequests().anyRequest().authenticated().and().formLogin().and().httpBasic();
     }
@@ -36,12 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .password("{noop}leal")
                 .roles("ADMIN").and()
                 .withUser("user")
-                .password("{noop}password")
+                .password("password")
                 .roles("USER");
 //se puede utilizar con and o creando un nuevo metodo
         auth.inMemoryAuthentication()
                 .withUser("scot")
-                .password("{noop}tiger")
+                .password("tiger")
                 .roles("CUSTOMER");
     }
 
