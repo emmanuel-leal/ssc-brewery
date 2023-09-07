@@ -12,6 +12,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import security.SfgPasswordEncoderFactories;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
