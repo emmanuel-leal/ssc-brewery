@@ -7,17 +7,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,19 +26,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().anyRequest().authenticated().and().formLogin().and().httpBasic();
     }
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new LdapShaPasswordEncoder();
+    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("jose")
-                .password("{noop}leal")
+                //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
+                .password("{SSHA}FFqkIihwL3fsZHjUy6hA3cXkPGyCwlqcENn7DA==")
                 .roles("ADMIN").and()
                 .withUser("user")
-                .password("password")
+                //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
+                .password("{SSHA}FFqkIihwL3fsZHjUy6hA3cXkPGyCwlqcENn7DA==")
                 .roles("USER");
 //se puede utilizar con and o creando un nuevo metodo
         auth.inMemoryAuthentication()
                 .withUser("scot")
-                .password("tiger")
+                //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
+                .password("{SSHA}An0Qrz/Vwok3/F+6rlw/xM33mjSzxOqL4wk8NQ==")
                 .roles("CUSTOMER");
     }
 
