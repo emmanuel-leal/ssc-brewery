@@ -2,15 +2,25 @@ package guru.sfg.brewery.web.controllers;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.*;
 import org.springframework.util.DigestUtils;
 
 public class PasswordEncodingTests {
 
     private static String PASSWORD =  "password";
+
+    private static String TIGER =  "tiger";
+
+
+    @Test
+    public void testCha256(){
+        PasswordEncoder sha256 = new StandardPasswordEncoder();
+        System.out.println(sha256.encode(PASSWORD));
+        System.out.println(sha256.encode(PASSWORD));
+        System.out.println(sha256.encode(TIGER));
+        Assert.assertTrue(sha256.matches(PASSWORD,sha256.encode(PASSWORD)));
+        Assert.assertTrue(sha256.matches(TIGER,sha256.encode(TIGER)));
+    }
 
     @Test
     public void testLdap(){

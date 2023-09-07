@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -28,24 +29,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new LdapShaPasswordEncoder();
+        return new StandardPasswordEncoder();
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("jose")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("{SSHA}FFqkIihwL3fsZHjUy6hA3cXkPGyCwlqcENn7DA==")
+                .password("3883aa23993e8fd5a8385d357a4eed556e33ac3e6aef6bd23fab0defacebf3f5a3a3ec57189728c5")
                 .roles("ADMIN").and()
                 .withUser("user")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("{SSHA}FFqkIihwL3fsZHjUy6hA3cXkPGyCwlqcENn7DA==")
+                .password("3883aa23993e8fd5a8385d357a4eed556e33ac3e6aef6bd23fab0defacebf3f5a3a3ec57189728c5")
                 .roles("USER");
 //se puede utilizar con and o creando un nuevo metodo
         auth.inMemoryAuthentication()
                 .withUser("scot")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("{SSHA}An0Qrz/Vwok3/F+6rlw/xM33mjSzxOqL4wk8NQ==")
+                .password("0beded76929ce2b6eb9ecc49b4ea5c182c257f9e4f06365e83c2ff53ba080969568497b8b8aed95d")
                 .roles("CUSTOMER");
     }
 
