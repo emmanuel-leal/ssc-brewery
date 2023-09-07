@@ -12,7 +12,13 @@ public class PasswordEncodingTests {
 
     private static String TIGER =  "tiger";
 
+    @Test
+    public void testBcrypt15(){
+        //por default es 10, entre mayor sea el numero , mas va a tardar en encriptar
+        PasswordEncoder bcript = new BCryptPasswordEncoder(15);
+        System.out.println(bcript.encode(TIGER));
 
+    }
     @Test
     public void testBcrypt(){
         //por default es 10, entre mayor sea el numero , mas va a tardar en encriptar

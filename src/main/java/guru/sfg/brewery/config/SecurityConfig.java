@@ -7,11 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import security.SfgPasswordEncoderFactories;
 
 @Configuration
@@ -49,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("scot")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("{bcrypt}$2a$10$bNxA09teyU81drVDF1erk.5ji.Nu.w4cV1u6tzpA7Hsh6kvbj8xTK")
+                .password("{bcrypt15}$2a$15$JrFmrLBrFsTzvAOfJZXZhu69Et8bHZxumwsdtLdegsVzMUYyxde7G")
                 .roles("CUSTOMER");
     }
 
