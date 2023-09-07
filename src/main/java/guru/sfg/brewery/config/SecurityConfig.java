@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -30,24 +31,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("jose")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("$2a$10$6EZpt5h089Ju0Svla52fz.tloixy8vz3vmoLtnj4dMxm4PCTSOdb6")
+                .password("{ldap}{SSHA}5tf5HFsr99xAFSOPzVnoODoYZ/S8iDG3LDrswg==")
                 .roles("ADMIN").and()
                 .withUser("user")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("$2a$10$6EZpt5h089Ju0Svla52fz.tloixy8vz3vmoLtnj4dMxm4PCTSOdb6")
+                .password("{noop}password")
                 .roles("USER");
 //se puede utilizar con and o creando un nuevo metodo
         auth.inMemoryAuthentication()
                 .withUser("scot")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("$2a$10$TjxdQbYhgRg7s4.SLYUAPeyGdCxMhKCz/rCmMUUl/5yfUxXLBGOFC")
+                .password("{bcrypt}$2a$10$bNxA09teyU81drVDF1erk.5ji.Nu.w4cV1u6tzpA7Hsh6kvbj8xTK")
                 .roles("CUSTOMER");
     }
 

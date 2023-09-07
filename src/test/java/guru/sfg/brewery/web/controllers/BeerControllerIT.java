@@ -11,6 +11,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 public class BeerControllerIT extends BaseIT{
 
+
+    @Test
+    void initCreationFormJose() throws Exception{
+        //hay que notar que aqui es como si ingresaramos el password y contrase;a desde la app
+        mockMvc.perform(get("/beers/new").with(httpBasic("user","password")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/createBeer"))
+                .andExpect(model().attributeExists("beer"));
+    }
     @Test
     void initCreationForm() throws Exception{
         //hay que notar que aqui es como si ingresaramos el password y contrase;a desde la app
