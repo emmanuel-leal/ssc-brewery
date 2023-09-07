@@ -2,6 +2,7 @@ package guru.sfg.brewery.web.controllers;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.util.DigestUtils;
 
@@ -11,6 +12,17 @@ public class PasswordEncodingTests {
 
     private static String TIGER =  "tiger";
 
+
+    @Test
+    public void testBcrypt(){
+        //por default es 10, entre mayor sea el numero , mas va a tardar en encriptar
+        PasswordEncoder bcript = new BCryptPasswordEncoder(10);
+        System.out.println(bcript.encode(PASSWORD));
+        System.out.println(bcript.encode(PASSWORD));
+        System.out.println(bcript.encode(TIGER));
+        Assert.assertTrue(bcript.matches(PASSWORD,bcript.encode(PASSWORD)));
+        Assert.assertTrue(bcript.matches(TIGER,bcript.encode(TIGER)));
+    }
 
     @Test
     public void testCha256(){

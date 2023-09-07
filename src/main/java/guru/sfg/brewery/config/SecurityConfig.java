@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -29,24 +30,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new StandardPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("jose")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("3883aa23993e8fd5a8385d357a4eed556e33ac3e6aef6bd23fab0defacebf3f5a3a3ec57189728c5")
+                .password("$2a$10$6EZpt5h089Ju0Svla52fz.tloixy8vz3vmoLtnj4dMxm4PCTSOdb6")
                 .roles("ADMIN").and()
                 .withUser("user")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("3883aa23993e8fd5a8385d357a4eed556e33ac3e6aef6bd23fab0defacebf3f5a3a3ec57189728c5")
+                .password("$2a$10$6EZpt5h089Ju0Svla52fz.tloixy8vz3vmoLtnj4dMxm4PCTSOdb6")
                 .roles("USER");
 //se puede utilizar con and o creando un nuevo metodo
         auth.inMemoryAuthentication()
                 .withUser("scot")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("0beded76929ce2b6eb9ecc49b4ea5c182c257f9e4f06365e83c2ff53ba080969568497b8b8aed95d")
+                .password("$2a$10$TjxdQbYhgRg7s4.SLYUAPeyGdCxMhKCz/rCmMUUl/5yfUxXLBGOFC")
                 .roles("CUSTOMER");
     }
 
