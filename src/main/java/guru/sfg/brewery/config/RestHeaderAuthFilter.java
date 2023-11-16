@@ -1,6 +1,7 @@
 package guru.sfg.brewery.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -37,13 +38,19 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
             logger.debug("Request is to process authentication");
         }
 
-        Authentication authResult = attemptAuthentication(request, response);
+       try {
+           Authentication authResult = attemptAuthentication(request, response);
+           if(authResult != null){
+               successfulAuthentication(request,response,chain,authResult);
+           }else{
+               chain.doFilter(request,response);
+           }
+       }catch (AuthenticationException e){
+           log.error("Authentication failed",e);
+           super.unsuccessfulAuthentication(request,response,e);
+       }
 
-        if(authResult != null){
-            successfulAuthentication(request,response,chain,authResult);
-        }else{
-            chain.doFilter(request,response);
-        }
+
     }
 
     @Override
@@ -85,6 +92,21 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
 
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response, AuthenticationException failed)
+            throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Authentication request failed: " + failed.toString(), failed);
+            logger.debug("Updated SecurityContextHolder to contain null Authentication");
+        }
+
+
+        response.sendError(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
 }

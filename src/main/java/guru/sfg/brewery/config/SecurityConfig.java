@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("scot")
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
-                .password("{bcrypt15}$2a$15$JrFmrLBrFsTzvAOfJZXZhu69Et8bHZxumwsdtLdegsVzMUYyxde7G")
+                .password("{bcrypt10}$2a$15$JrFmrLBrFsTzvAOfJZXZhu69Et8bHZxumwsdtLdegsVzMUYyxde7G")
                 .roles("CUSTOMER");
     }
 
