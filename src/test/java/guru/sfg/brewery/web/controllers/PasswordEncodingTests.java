@@ -45,6 +45,7 @@ public class PasswordEncodingTests {
         PasswordEncoder ldap = new LdapShaPasswordEncoder();
         System.out.println(ldap.encode(PASSWORD));
         System.out.println(ldap.encode(PASSWORD));
+        System.out.println(ldap.encode("Calamardo"));
         String encodedPwd = ldap.encode(PASSWORD);
         Assert.assertTrue(ldap.matches(PASSWORD,encodedPwd));
     }
