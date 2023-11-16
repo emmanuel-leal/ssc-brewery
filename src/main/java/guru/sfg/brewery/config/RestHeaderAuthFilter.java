@@ -22,91 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
+public class RestHeaderAuthFilter extends AbstractRestAuthFilter {
 
     public RestHeaderAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
     }
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
-
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Request is to process authentication");
-        }
-
-       try {
-           Authentication authResult = attemptAuthentication(request, response);
-           if(authResult != null){
-               successfulAuthentication(request,response,chain,authResult);
-           }else{
-               chain.doFilter(request,response);
-           }
-       }catch (AuthenticationException e){
-           log.error("Authentication failed",e);
-           super.unsuccessfulAuthentication(request,response,e);
-       }
-
-
-    }
-
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        String userName = getUserName(request);
-        String password = getPassword(request);
-        if(userName == null){
-            userName="";
-        }
-        if(password == null){
-            password="";
-        }
-        log.debug("Authentication user: {}", userName);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName,password);
-        if(!StringUtils.isEmpty(userName)){
-            return this.getAuthenticationManager().authenticate(token);
-        }else{
-            return null;
-        }
-    }
-
-    private String getUserName(HttpServletRequest request){
+    protected String getUserName(HttpServletRequest request){
         return request.getHeader("Api-Key");
     }
 
-    private String getPassword(HttpServletRequest request){
+    protected String getPassword(HttpServletRequest request){
         return request.getHeader("Api-secret");
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Authentication success. Updating SecurityContextHolder to contain: "
-                    + authResult);
-        }
-
-        SecurityContextHolder.getContext().setAuthentication(authResult);
-
-    }
-
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                              HttpServletResponse response, AuthenticationException failed)
-            throws IOException, ServletException {
-        SecurityContextHolder.clearContext();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Authentication request failed: " + failed.toString(), failed);
-            logger.debug("Updated SecurityContextHolder to contain null Authentication");
-        }
-
-
-        response.sendError(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
 }

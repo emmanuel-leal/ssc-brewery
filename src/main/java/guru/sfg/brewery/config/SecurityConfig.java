@@ -23,10 +23,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return  filter;
     }
 
+    public RestUrlAuthFilter restUrlFilter(AuthenticationManager authenticationManager){
+        RestUrlAuthFilter filter = new RestUrlAuthFilter(new AntPathRequestMatcher("/api/**"));
+        filter.setAuthenticationManager(authenticationManager);
+        return  filter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(this.restHeaderAuthFilter(super.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
+        http.addFilterBefore(this.restUrlFilter(super.authenticationManager()),UsernamePasswordAuthenticationFilter.class);
         http.
                 authorizeRequests(authorizer ->
                 {
@@ -41,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
