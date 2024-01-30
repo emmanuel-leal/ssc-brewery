@@ -38,10 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests(authorizer ->
                 {
                     authorizer.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/**").permitAll()
+                            .antMatchers("/h2-console/**").permitAll() // no usar en prod
                             .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
                 })
                 .authorizeRequests().anyRequest().authenticated().and().formLogin().and().httpBasic();
+        // h2 console config
+        http.headers().frameOptions().sameOrigin();
     }
 
     @Bean
