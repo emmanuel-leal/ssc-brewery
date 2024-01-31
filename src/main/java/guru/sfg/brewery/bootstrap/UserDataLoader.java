@@ -37,6 +37,11 @@ public class UserDataLoader implements CommandLineRunner {
                         .authority(admin)
                 .build());
         userRepository.save(User.builder()
+                .userName("a")
+                .password(passwordEncoder.encode("a"))
+                .authority(admin)
+                .build());
+        userRepository.save(User.builder()
                 .userName("user")
                 .password(passwordEncoder.encode("passwordUser"))
                 .authority(userRole)

@@ -1,17 +1,20 @@
 package guru.sfg.brewery.config;
 
+
+import guru.sfg.brewery.security.RestHeaderAuthFilter;
+import guru.sfg.brewery.security.RestUrlAuthFilter;
+import guru.sfg.brewery.security.SfgPasswordEncoderFactories;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import security.SfgPasswordEncoderFactories;
+
 
 @Configuration
 @EnableWebSecurity
@@ -37,8 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests(authorizer ->
                 {
-                    authorizer.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/**").permitAll()
+                    authorizer
                             .antMatchers("/h2-console/**").permitAll() // no usar en prod
+                            .antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/**").permitAll()
                             .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
                 })
@@ -52,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Override
+    /*@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("jose")
@@ -70,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //en esta pararte se configura ya encriptada la contrasenia, la desencripcion lo hace spring security internamente
                 .password("{bcrypt10}$2a$15$JrFmrLBrFsTzvAOfJZXZhu69Et8bHZxumwsdtLdegsVzMUYyxde7G")
                 .roles("CUSTOMER");
-    }
+    }*/
 
     /*    @Override
     @Bean
