@@ -20,7 +20,7 @@ public class BreweryRestControllerIT extends BaseIT {
     void getBreweryHttpBasicAdminRole() throws Exception{
         mockMvc.perform(get("/brewery/breweries")
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic("jose","Calamardo")))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class BreweryRestControllerIT extends BaseIT {
     void getBreweriesJSONAdminRole() throws Exception{
         mockMvc.perform(get("/brewery/api/v1/breweries")
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic("jose","Calamardo")))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
 }
