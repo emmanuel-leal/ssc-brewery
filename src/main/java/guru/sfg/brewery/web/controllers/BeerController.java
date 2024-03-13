@@ -76,7 +76,6 @@ public class BeerController {
         }
     }
 
-
     @GetMapping("/{beerId}")
     public ModelAndView showBeer(@PathVariable UUID beerId) {
         ModelAndView mav = new ModelAndView("beers/beerDetails");
