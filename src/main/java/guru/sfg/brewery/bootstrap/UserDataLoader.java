@@ -11,8 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -21,10 +23,11 @@ import java.util.Set;
 public class UserDataLoader implements CommandLineRunner {
 
     private final AuthorityRepository authorityRepository;
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
 
         if( authorityRepository.count() == 0 ){
@@ -33,9 +36,7 @@ public class UserDataLoader implements CommandLineRunner {
     }
 
     private void loadsecurityData() {
-//        Authority adminRole= authorityRepository.save(Authority.builder().permission("ROLE_ADMIN").build());
-//        Authority userRole = authorityRepository.save(Authority.builder().permission("ROLE_USER").build());
-//        Authority customerRole = authorityRepository.save(Authority.builder().permission("ROLE_CUSTOMER").build());
+        // beer auths
         Authority createBeer = authorityRepository.save(Authority.builder()
                         .permission("beer.create")
                 .build());
@@ -49,17 +50,47 @@ public class UserDataLoader implements CommandLineRunner {
                 .permission("beer.delete")
                 .build());
 
+        //customer auths
+        Authority createCustomer = authorityRepository.save(Authority.builder()
+                .permission("customer.create")
+                .build());
+        Authority updateCustomer = authorityRepository.save(Authority.builder()
+                .permission("customer.update")
+                .build());
+        Authority readCustomer = authorityRepository.save(Authority.builder()
+                .permission("customer.read")
+                .build());
+        Authority deleteCustomer = authorityRepository.save(Authority.builder()
+                .permission("customer.delete")
+                .build());
+
+        //brewery auths
+        Authority createBrewery  = authorityRepository.save(Authority.builder()
+                .permission("brewery.create")
+                .build());
+        Authority updateBrewery = authorityRepository.save(Authority.builder()
+                .permission("brewery.update")
+                .build());
+        Authority readBrewery = authorityRepository.save(Authority.builder()
+                .permission("brewery.read")
+                .build());
+        Authority deleteBrewery = authorityRepository.save(Authority.builder()
+                .permission("brewery.delete")
+                .build());
+
         Role adminRole = roleRepository.save(Role.builder().name("ADMIN").build());
         Role customerRole = roleRepository.save(Role.builder().name("CUSTOMER").build());
         Role userRole = roleRepository.save(Role.builder().name("USER").build());
 
-        adminRole.setAuthorities(Set.of(createBeer,updateBeer,readBeer,deleteBeer));
-        customerRole.setAuthorities(Set.of(readBeer));
-        userRole.setAuthorities(Set.of(readBeer));
+        adminRole.setAuthorities(new HashSet<>(Set.of(createBeer,updateBeer,readBeer,deleteBeer,
+                createCustomer,readCustomer,updateCustomer,deleteCustomer,
+                createBrewery, readBrewery, updateBrewery, deleteBrewery)));
+        customerRole.setAuthorities(new HashSet<>(Set.of(readBeer, readCustomer,readBrewery)));
+        userRole.setAuthorities(new HashSet<>(Set.of(readBeer)));
 
         roleRepository.saveAll(Arrays.asList(adminRole,customerRole,userRole));
 
-        userRepository.save(User.builder()
+        userRepository.saveAndFlush(User.builder()
                 .userName("spring")
                         .password(passwordEncoder.encode("password"))
                         .role(adminRole)
